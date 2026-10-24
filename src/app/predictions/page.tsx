@@ -1,3 +1,3 @@
-import { AiPage } from "@/components/ai/AiPage";
+import { PublicPredictionPage } from "@/components/ai/PublicPredictionPage";
 
-export default function PredictionsPage() { return <AiPage kind="prediction" />; }
+export default function PredictionsPage() { return <PublicPredictionPage />; }

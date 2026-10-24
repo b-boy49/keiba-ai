@@ -1,0 +1,5 @@
+ai/
+.venv/
+docs/
+design/
+scripts/

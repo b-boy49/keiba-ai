@@ -1,3 +1,3 @@
-import { AiPage } from "@/components/ai/AiPage";
+import { PublicAnalysisPage } from "@/components/ai/PublicAnalysisPage";
 
-export default function AnalysisPage() { return <AiPage kind="analysis" />; }
+export default function AnalysisPage() { return <PublicAnalysisPage />; }
