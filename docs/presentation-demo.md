@@ -18,6 +18,21 @@ $env:PYTHONPATH = "ai"
 
 Open `ai/quarantine/presentation-demo/presentation-demo.html` only on the presentation computer. It is a standalone offline dashboard: four races are switched by date tabs or the previous/next buttons, and it does not call any server, API, or CDN. The adjacent JSON gives the fixed race IDs, prediction/actual comparison, concise pre-race reasons, and leakage controls.
 
+## 全頭順位を当日に再計算する
+
+次のコマンドは、保存済み順位を表示するのではなく、固定4レースの発走前特徴量を既存LightGBMへ再投入し、全出走馬のスコアと順位を毎回生成します。`finish_position` は推論に渡されず、画面の比較欄にだけ使われます。
+
+```powershell
+$env:PYTHONPATH = "ai"
+.\.venv\Scripts\python.exe -m ai.cli rerun-historical-full-rankings `
+  --input ai\quarantine\kblueleaf_dirt_1800_2200_research.csv `
+  --model ai\quarantine\artifacts\all-dirt-research-20261023T171338Z `
+  --horse-name-mapping ai\quarantine\presentation-demo\official-horse-names.csv `
+  --output-dir ai\quarantine\presentation-demo
+```
+
+開くファイルは `ai\quarantine\presentation-demo\historical-2019-full-rankings.html` です。4レース計43頭を表示しますが、実名はJRA照合済み18頭だけです。残りは `非表示（JRA照合未完了）` と表示し、研究データの馬名で補完しません。
+
 ## Presentation-day launch
 
 1. Run the command above on the presentation computer to refresh the isolated local artifact.

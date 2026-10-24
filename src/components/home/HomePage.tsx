@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { HorseMark, Icon, IconName } from "@/app/icons";
 import { formatDotDate, formatJaDate } from "@/lib/format-date";
 import { raceStatusLabel, surfaceLabel, type Race } from "@/types/race";
+import { PresentationOverview } from "@/components/home/PresentationOverview";
 
 const menu: [IconName, string, string][] = [["home", "ホーム", "/"], ["calendar", "レース一覧", "/races"], ["brain", "AI予想", "/predictions"], ["chart", "AI分析", "/analysis"], ["flag", "レース結果", "/results"], ["trophy", "予想成績", "/performance"], ["info", "サイト情報", "/about"]];
 const featureCards: [IconName, string, string, string][] = [["calendar", "レース一覧", "開催日・競馬場から\nレースを検索", "/races"], ["brain", "AI予想", "AIによる1〜3着予想と\n根拠を確認", "/predictions"], ["chart", "AI分析", "出走馬の能力や適性を\n多角的に分析", "/analysis"], ["flag", "レース結果", "着順・タイム・払戻金を\nすばやく確認", "/results"], ["trophy", "予想成績", "AI予想の成績や検証を\nチェック", "/performance"]];
@@ -64,10 +65,11 @@ export function HomePage({ races, localPresentationDemoEnabled = false }: { race
         <RaceSearchForm races={races} formRef={searchRef} />
       </div>
     </section>
+    <PresentationOverview />
     <div className="page-bg">
       {localPresentationDemoEnabled && <section className="shell local-demo-guide" aria-label="Past race AI prediction demo">
         <div><p>LOCAL PRESENTATION MODE</p><h2>過去レース AI予想デモ</h2><span>研究データや予測結果はサイトへ送信されません。発表会用PCで隔離済みHTMLを直接開いてください。</span></div>
-        <code>ai/quarantine/presentation-demo/presentation-demo.html</code>
+        <code>ローカル発表会資料を確認</code>
       </section>}
       <section className="shell feature-grid" aria-label="サービス一覧">{featureCards.map(([icon, title, text, href]) => <Link href={href} className="feature" key={title}><Icon name={icon} className="feature-icon" /><span className="feature-text"><b>{title}</b><small>{text.split("\n").map((line) => <span key={line}>{line}</span>)}</small></span><Icon name="arrow" className="feature-arrow" /></Link>)}</section>
       <section className="shell dashboard">

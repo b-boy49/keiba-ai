@@ -1,0 +1,2 @@
+race_id,race_date,course_id,course_name,race_no,race_name,surface,distance_m,horse_id,horse_name,jockey_id,jockey_name,gate_no,horse_no,carried_weight_kg,entry_status,published_at,official_source_url,official_checked_at
+REPLACE_WITH_OFFICIAL_RACE_ID,YYYY-MM-DD,REPLACE_COURSE_ID,REPLACE_COURSE_NAME,0,REPLACE_RACE_NAME,DIRT,1800,REPLACE_CANONICAL_HORSE_ID,REPLACE_OFFICIAL_HORSE_NAME,REPLACE_CANONICAL_JOCKEY_ID,REPLACE_OFFICIAL_JOCKEY_NAME,1,1,55.0,CONFIRMED,YYYY-MM-DDThh:mm:ssZ,https://www.jra.go.jp/REPLACE,YYYY-MM-DDThh:mm:ssZ

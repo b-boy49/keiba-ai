@@ -79,7 +79,10 @@ def history_coverage_report(entries_path: str | Path, performances_path: str | P
         if pd.notna(latest) and latest < POST_2025_START: reasons.append("no_result_since_2025_03_01")
         rows.append({"race_id": TARGET_RACE["race_id"], "horse_id": entry.horse_id, "horse_name": entry.horse_name,
                      "prior_starts": len(horse), "latest_prior_race_date": latest.isoformat() if pd.notna(latest) else "",
-                     "history_status": "SUFFICIENT" if not reasons else "INSUFFICIENT", "missing_reason": ";".join(reasons)})
+                     "history_status": "SUFFICIENT" if not reasons else "INSUFFICIENT", "missing_reason": ";".join(reasons),
+                     "model_missing_value_policy": "LightGBM accepts NaN for unavailable aggregate features; no missing value is replaced with zero",
+                     "inference_eligibility": "MODEL_CAN_HANDLE_HISTORY_GAP" if reasons else "READY",
+                     "identity_requirement": "canonical horse and jockey IDs must be reviewed before inference"})
     target = Path(output_path); target.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(target, index=False)
     return target
@@ -105,7 +108,11 @@ def predict_target_research(*, entries_path: str | Path, performances_path: str 
     feature_path = output.with_suffix(".features.csv")
     build_target_features(entries_path, performances_path, feature_path, feature_as_of)
     frame = pd.read_csv(feature_path)
-    result = predict(load_bundle(model), frame).query("predicted_rank <= 3").copy()
+    result = predict(load_bundle(model), frame).copy()
+    # Keep every confirmed runner. Scores are model output only; deterministic
+    # horse-ID tie breaking prevents an arbitrary presentation order.
+    result = result.sort_values(["reference_win_score", "horse_id"], ascending=[False, True], kind="stable").reset_index(drop=True)
+    result["predicted_rank"] = result.index + 1
     result["visibility"] = "INTERNAL_RESEARCH_ONLY"
     result["generated_at"] = datetime.now(timezone.utc).isoformat()
     output.parent.mkdir(parents=True, exist_ok=True); result.to_csv(output, index=False)
