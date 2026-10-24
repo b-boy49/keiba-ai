@@ -22,6 +22,7 @@ from .canonical_identity import resolve_race_card_identities
 from .race_prediction import build_race_features, predict_configured_race_research, race_history_coverage_report
 from .live_race_dashboard import create_live_race_dashboard
 from .historical_full_ranking import rerun_historical_full_rankings
+from .historical_local_demo import build_historical_local_demo
 
 def rights_args(command: argparse.ArgumentParser) -> None:
     command.add_argument("--rights-manifest", required=True); command.add_argument("--provider-id", required=True)
@@ -63,6 +64,8 @@ def main() -> None:
     dashboard.add_argument("--spec", required=True); dashboard.add_argument("--output", required=True); dashboard.add_argument("--entries"); dashboard.add_argument("--prediction"); dashboard.add_argument("--model-version"); dashboard.add_argument("--provider-id")
     historical_rankings = commands.add_parser("rerun-historical-full-rankings", help="Re-run full-field rankings for the fixed untouched 2019 presentation races")
     historical_rankings.add_argument("--input", required=True); historical_rankings.add_argument("--model", required=True); historical_rankings.add_argument("--horse-name-mapping", required=True); historical_rankings.add_argument("--output-dir", required=True)
+    historical_demo = commands.add_parser("build-historical-local-demo", help="Build an interactive local-only historical ranking page")
+    historical_demo.add_argument("--rankings", required=True); historical_demo.add_argument("--display-fields", required=True); historical_demo.add_argument("--output", required=True)
     watcher = commands.add_parser("watch-target-research", help="Offline approved-CSV watcher; never downloads race data")
     watcher.add_argument("--intake-dir", default="ai/quarantine/intake"); watcher.add_argument("--output-dir", default="ai/quarantine/predictions"); watcher.add_argument("--model", required=True); watcher.add_argument("--registry", default="ai/quarantine/research-active.json"); watcher.add_argument("--feature-as-of", required=True)
     demo = commands.add_parser("create-presentation-demo", help="Create a local-only historical research demo under ai/quarantine")
@@ -94,6 +97,7 @@ def main() -> None:
     if args.command == "predict-configured-race-research": print(predict_configured_race_research(spec_path=args.spec, entries_path=args.entries, performances_path=args.past_performances, horses_path=args.horses, jockeys_path=args.jockeys, model_dir=args.model, registry_path=args.registry, output_path=args.output, feature_as_of=args.feature_as_of)); return
     if args.command == "create-live-race-dashboard": print(create_live_race_dashboard(spec_path=args.spec, output_path=args.output, entries_path=args.entries, prediction_path=args.prediction, model_version=args.model_version, provider_id=args.provider_id)); return
     if args.command == "rerun-historical-full-rankings": print(rerun_historical_full_rankings(input_path=args.input, model_dir=args.model, name_allowlist=args.horse_name_mapping, output_dir=args.output_dir)); return
+    if args.command == "build-historical-local-demo": print(build_historical_local_demo(ranking_path=args.rankings, display_fields_path=args.display_fields, output_path=args.output)); return
     if args.command == "watch-target-research": print(json.dumps(run_target_watch(intake_dir=args.intake_dir, output_dir=args.output_dir, model_dir=args.model, registry_path=args.registry, feature_as_of=args.feature_as_of), ensure_ascii=False, indent=2)); return
     if args.command == "create-presentation-demo": print(create_presentation_demo(input_path=args.input, model_dir=args.model, output_dir=args.output_dir, rights_manifest=args.rights_manifest, provider_id=args.provider_id, horse_name_mapping=args.horse_name_mapping, include_horse_names=args.include_horse_names)); return
     if args.command in {"train", "retrain"}:
