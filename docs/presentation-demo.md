@@ -16,20 +16,22 @@ $env:PYTHONPATH = "ai"
   --include-horse-names
 ```
 
-Open `ai/quarantine/presentation-demo/presentation-demo.html` only on the presentation computer. The adjacent JSON gives the fixed race IDs, prediction/actual comparison, concise pre-race reasons, and leakage controls.
+Open `ai/quarantine/presentation-demo/presentation-demo.html` only on the presentation computer. It is a standalone offline dashboard: four races are switched by date tabs or the previous/next buttons, and it does not call any server, API, or CDN. The adjacent JSON gives the fixed race IDs, prediction/actual comparison, concise pre-race reasons, and leakage controls.
 
 ## Presentation-day launch
 
 1. Run the command above on the presentation computer to refresh the isolated local artifact.
-2. To show the KEIBA AI homepage guide during local development only, start the site in a separate PowerShell session:
+2. Open `ai\quarantine\presentation-demo\presentation-demo.html` directly in a modern browser. The initial race is 2019-10-14 (東京9R).
+3. Use the date tabs or the previous/next buttons to move between the four fixed races. Explain the three separate badges: `本命的中` (AI 1位=実際の1着), `勝ち馬候補的中` (実際の1着がAI上位3頭), and `3着以内あり` (AI上位3頭のいずれかが実際の3着以内).
+4. The 22.15% / 48.73% figures describe the existing 158-race chronological Tokyo dirt 2100m test, not the four displayed races.
+5. To show the KEIBA AI homepage guide during local development only, start the site in a separate PowerShell session:
 
 ```powershell
 $env:KEIBA_LOCAL_PRESENTATION_DEMO = "true"
 npm.cmd run dev
 ```
 
-3. Open the homepage from that local development server. The guide shows the local file path, but does not read, serve, or transmit the demo JSON/HTML.
-4. Open `ai/quarantine/presentation-demo/presentation-demo.html` directly in the local browser for the presentation.
+6. Open the homepage from that local development server. The guide shows the local file path, but does not read, serve, or transmit the demo JSON/HTML.
 
 `KEIBA_LOCAL_PRESENTATION_DEMO` is ignored outside development. The production build has no demo route, link, API response, or bundled presentation data.
 

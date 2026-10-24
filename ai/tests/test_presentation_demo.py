@@ -3,7 +3,7 @@ import sys, tempfile, unittest
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from keiba_ai.presentation_demo import _load_verified_names, select_demo_races
+from keiba_ai.presentation_demo import EVALUATION, WITHHELD_NAME, _evaluation_summary, _load_verified_names, _outcome, select_demo_races
 
 
 class PresentationDemoTest(unittest.TestCase):
@@ -17,6 +17,25 @@ class PresentationDemoTest(unittest.TestCase):
             path = Path(directory) / "names.csv"
             pd.DataFrame([{"race_id": "R1", "horse_id": "H1", "horse_name": "Verified Horse", "source_url": "https://www.jra.go.jp/example", "confirmed_at": "2026-10-24T00:00:00Z", "verification_status": "CONFIRMED", "display_scope": "LOCAL_PRESENTATION"}]).to_csv(path, index=False)
             self.assertEqual(_load_verified_names(path, selected), {("R1", "H1"): "Verified Horse"})
+
+    def test_outcomes_keep_three_hit_definitions_separate(self):
+        predicted = [
+            {"horse_name": "A", "actual_finish": 4},
+            {"horse_name": "B", "actual_finish": 1},
+            {"horse_name": "C", "actual_finish": 8},
+        ]
+        actual = [{"horse_name": "B", "finish_position": 1}]
+        self.assertEqual(_outcome(predicted, actual), {"top1_winner": False, "winner_in_top3": True, "top3_finish": True})
+
+    def test_evaluation_summary_rejects_mismatched_metrics(self):
+        metadata = {"test_metrics": {"model": {"winner_top1_accuracy": EVALUATION["top1_rate"] / 100, "winner_top3_recall": EVALUATION["top3_rate"] / 100, "races": EVALUATION["races"]}}}
+        self.assertEqual(_evaluation_summary(metadata)["races"], 158)
+        metadata["test_metrics"]["model"]["races"] = 157
+        with self.assertRaises(ValueError):
+            _evaluation_summary(metadata)
+
+    def test_withheld_label_is_not_a_horse_name(self):
+        self.assertIn("非表示", WITHHELD_NAME)
 
 
 if __name__ == "__main__": unittest.main()
