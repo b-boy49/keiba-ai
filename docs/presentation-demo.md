@@ -18,6 +18,21 @@ $env:PYTHONPATH = "ai"
 
 Open `ai/quarantine/presentation-demo/presentation-demo.html` only on the presentation computer. The adjacent JSON gives the fixed race IDs, prediction/actual comparison, concise pre-race reasons, and leakage controls.
 
+## Presentation-day launch
+
+1. Run the command above on the presentation computer to refresh the isolated local artifact.
+2. To show the KEIBA AI homepage guide during local development only, start the site in a separate PowerShell session:
+
+```powershell
+$env:KEIBA_LOCAL_PRESENTATION_DEMO = "true"
+npm.cmd run dev
+```
+
+3. Open the homepage from that local development server. The guide shows the local file path, but does not read, serve, or transmit the demo JSON/HTML.
+4. Open `ai/quarantine/presentation-demo/presentation-demo.html` directly in the local browser for the presentation.
+
+`KEIBA_LOCAL_PRESENTATION_DEMO` is ignored outside development. The production build has no demo route, link, API response, or bundled presentation data.
+
 ## Integrity statement for the presentation
 
 - Feature snapshots are constructed before results from that race day are applied. `finish_position`, time, final time, and time factor are excluded from features.
