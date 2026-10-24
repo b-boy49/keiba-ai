@@ -1,0 +1,12 @@
+{
+  "source_name": "REPLACE_WITH_SOURCE_NAME",
+  "source_url": "https://REPLACE_WITH_SOURCE_URL",
+  "checked_at": "YYYY-MM-DDThh:mm:ssZ",
+  "reviewer": "REPLACE_WITH_REVIEWER",
+  "record_types": ["entries", "horses", "jockeys", "past_performances"],
+  "intended_use": "local research inference only",
+  "terms_url": "https://REPLACE_WITH_TERMS_URL",
+  "terms_summary": "REPLACE_WITH_RELEVANT_PERMISSION_OR_RESTRICTION",
+  "approval_status": "PENDING_REVIEW",
+  "approval_note": "This file records a review request. It does not grant ingestion, display, redistribution, or publication permission."
+}

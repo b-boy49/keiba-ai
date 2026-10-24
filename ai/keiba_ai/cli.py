@@ -19,7 +19,7 @@ from .target_intake import import_post_2025_results, history_coverage_report, pr
 from .presentation_demo import create_presentation_demo
 from .target_watch import run_target_watch
 from .canonical_identity import resolve_race_card_identities
-from .race_prediction import build_race_features, predict_configured_race_research
+from .race_prediction import build_race_features, predict_configured_race_research, race_history_coverage_report
 from .live_race_dashboard import create_live_race_dashboard
 from .historical_full_ranking import rerun_historical_full_rankings
 
@@ -49,13 +49,15 @@ def main() -> None:
     target_features = commands.add_parser("build-target-features"); target_features.add_argument("--entries", required=True); target_features.add_argument("--past-performances", required=True); target_features.add_argument("--output", required=True); target_features.add_argument("--feature-as-of", required=True)
     race_features = commands.add_parser("build-race-features", help="Build pre-race features for a configured approved dirt 1800-2200m card")
     race_features.add_argument("--spec", required=True); race_features.add_argument("--entries", required=True); race_features.add_argument("--past-performances", required=True); race_features.add_argument("--output", required=True); race_features.add_argument("--feature-as-of", required=True)
+    race_coverage = commands.add_parser("race-history-coverage", help="Report pre-race history gaps for a configured local research race")
+    race_coverage.add_argument("--spec", required=True); race_coverage.add_argument("--entries", required=True); race_coverage.add_argument("--past-performances", required=True); race_coverage.add_argument("--output", required=True); race_coverage.add_argument("--feature-as-of", required=True)
     post_2025 = commands.add_parser("import-post-2025-results", help="Rights-checked import of results from 2025-03-01 onward")
     post_2025.add_argument("--input", required=True); post_2025.add_argument("--output", required=True); post_2025.add_argument("--horses", required=True); post_2025.add_argument("--jockeys", required=True); rights_args(post_2025)
     coverage = commands.add_parser("target-history-coverage", help="Report missing or stale history for target entries")
     coverage.add_argument("--entries", required=True); coverage.add_argument("--past-performances", required=True); coverage.add_argument("--output", required=True); coverage.add_argument("--feature-as-of", required=True)
     target_predict = commands.add_parser("predict-target-research", help="Internal-only quarantined Top-3 target prediction")
     target_predict.add_argument("--entries", required=True); target_predict.add_argument("--past-performances", required=True); target_predict.add_argument("--horses", required=True); target_predict.add_argument("--jockeys", required=True); target_predict.add_argument("--model", required=True); target_predict.add_argument("--registry", default="ai/quarantine/research-active.json"); target_predict.add_argument("--output", required=True); target_predict.add_argument("--feature-as-of", required=True)
-    race_predict = commands.add_parser("predict-configured-race-research", help="Rank all 10 approved runners for the configured local research race")
+    race_predict = commands.add_parser("predict-configured-race-research", help="Rank every confirmed runner for the configured local research race")
     race_predict.add_argument("--spec", required=True); race_predict.add_argument("--entries", required=True); race_predict.add_argument("--past-performances", required=True); race_predict.add_argument("--horses", required=True); race_predict.add_argument("--jockeys", required=True); race_predict.add_argument("--model", required=True); race_predict.add_argument("--registry", default="ai/quarantine/research-active.json"); race_predict.add_argument("--output", required=True); race_predict.add_argument("--feature-as-of", required=True)
     dashboard = commands.add_parser("create-live-race-dashboard", help="Create an offline configured-race dashboard under quarantine")
     dashboard.add_argument("--spec", required=True); dashboard.add_argument("--output", required=True); dashboard.add_argument("--entries"); dashboard.add_argument("--prediction"); dashboard.add_argument("--model-version"); dashboard.add_argument("--provider-id")
@@ -85,6 +87,7 @@ def main() -> None:
     if args.command == "all-dirt-research": print(run_all_dirt_research(args.input, args.artifacts)); return
     if args.command == "build-target-features": print(build_target_features(args.entries, args.past_performances, args.output, args.feature_as_of)); return
     if args.command == "build-race-features": print(build_race_features(spec_path=args.spec, entries_path=args.entries, performances_path=args.past_performances, output_path=args.output, feature_as_of=args.feature_as_of)); return
+    if args.command == "race-history-coverage": print(race_history_coverage_report(spec_path=args.spec, entries_path=args.entries, performances_path=args.past_performances, output_path=args.output, feature_as_of=args.feature_as_of)); return
     if args.command == "import-post-2025-results": print(import_post_2025_results(args.input, args.output, horses_path=args.horses, jockeys_path=args.jockeys, provider_id=args.provider_id, rights_manifest=args.rights_manifest)); return
     if args.command == "target-history-coverage": print(history_coverage_report(args.entries, args.past_performances, args.output, args.feature_as_of)); return
     if args.command == "predict-target-research": print(predict_target_research(entries_path=args.entries, performances_path=args.past_performances, horses_path=args.horses, jockeys_path=args.jockeys, model_dir=args.model, registry_path=args.registry, output_path=args.output, feature_as_of=args.feature_as_of)); return
