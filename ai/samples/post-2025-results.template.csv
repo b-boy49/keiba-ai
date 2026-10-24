@@ -1,0 +1,2 @@
+race_id,horse_id,jockey_id,race_date,course_id,finish_position,surface,distance_m,track_condition
+<source-race-id>,<canonical-horse-id>,<canonical-jockey-id>,2025-03-01,tokyo,1,DIRT,2100,GOOD

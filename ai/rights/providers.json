@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "providers": [
+    {
+      "id": "wikidata-cc0",
+      "name": "Wikidata structured data",
+      "url": "https://www.wikidata.org/",
+      "license": "CC0-1.0",
+      "approval_status": "APPROVED",
+      "scope_note": "競走馬名・血統・Wikidata識別子などの補助メタデータ専用。JRAの出馬表、枠順、オッズ、結果、払戻金を代替する提供元ではない。",
+      "evidence": [
+        {"reference": "wikidata-licensing-2026-10-23", "url": "https://www.wikidata.org/wiki/Wikidata:Licensing", "checked_at": "2026-10-23", "note": "Wikidataの構造化データはCC0"},
+        {"reference": "wikimedia-api-guidelines-2026-10-23", "url": "https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_API_Usage_Guidelines", "checked_at": "2026-10-23", "note": "識別可能なUser-Agent、レート制限・バックオフを遵守"}
+      ],
+      "record_type_permissions": {
+        "horses": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": true, "redistribution": true}
+      }
+    },
+    {
+      "id": "kblueleaf-jp-racing-horse-research",
+      "name": "KBlueLeaf jp-racing-horse (quarantined research only)",
+      "url": "https://huggingface.co/datasets/KBlueLeaf/jp-racing-horse",
+      "license": "Apache-2.0 declared by repository uploader; upstream provenance unresolved",
+      "approval_status": "APPROVED",
+      "scope_note": "Limited internal information-analysis evaluation under a documented Japanese Copyright Act Article 30-4 assessment. This is not a conclusion about upstream rights. No public display, redistribution, site publication, source-data export, or automated source collection is permitted.",
+      "evidence": [
+        {"reference": "hf-dataset-card-2026-10-23", "url": "https://huggingface.co/datasets/KBlueLeaf/jp-racing-horse", "checked_at": "2026-10-23", "note": "Public repository declares Apache-2.0; README contains no provenance description."},
+        {"reference": "hf-db-schema-2026-10-23", "url": "https://huggingface.co/datasets/KBlueLeaf/jp-racing-horse/blob/main/db.py", "checked_at": "2026-10-23", "note": "Schema documents Race/Horse and identifies a Netkeiba-derived time factor; upstream permission remains unverified."},
+        {"reference": "copyright-act-article-30-4-2026-10-23", "url": "https://laws.e-gov.go.jp/law/345AC0000000048", "checked_at": "2026-10-23", "note": "Internal non-enjoyment information-analysis assessment only; the unfair-harm proviso and non-copyright issues remain reserved."}
+      ],
+      "record_type_permissions": {
+        "races": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": false, "redistribution": false},
+        "entries": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": false, "redistribution": false},
+        "past_performances": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": false, "redistribution": false},
+        "horses": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": false, "redistribution": false},
+        "jockeys": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": false, "redistribution": false},
+        "results": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": false, "redistribution": false},
+        "training_features": {"ingest": true, "internal_storage": true, "ml_training": true, "public_display": false, "redistribution": false}
+      }
+    }
+  ]
+}

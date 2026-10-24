@@ -1,0 +1,16 @@
+.venv/
+ai/artifacts/
+ai/data/*.csv
+!ai/data/.gitkeep
+ai/cache/
+ai/quarantine/
+!ai/quarantine/.gitkeep
+__pycache__/
+*.py[cod]
+.env
+.env.local
+.env*.local
+node_modules/
+.next/
+out/
+*.tsbuildinfo

@@ -1,0 +1,2 @@
+race_id,horse_id,horse_name,jockey_id,jockey_name,entry_status,gate_no,horse_no,carried_weight_kg,published_at
+tokyo-20261107-09,<canonical-horse-id>,<confirmed-horse-name>,<canonical-jockey-id>,<confirmed-jockey-name>,CONFIRMED,1,1,57.0,2026-11-06T00:00:00Z

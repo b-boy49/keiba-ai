@@ -1,0 +1,19 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import type { AiPerformance, AiPrediction } from "@/lib/ai/contracts";
+
+type PageKind = "prediction" | "analysis" | "performance";
+const raceId = "tokyo-20261107-09";
+const headings: Record<PageKind, [string, string]> = { prediction: ["AI予想", "承認済みの実データモデルだけを、参考スコアとして表示します。"], analysis: ["AI分析", "予測の前提・モデル情報を確認できます。"], performance: ["予想成績", "保存済みの実予測と確定結果からのみ集計します。"] };
+function NotReady({ message }: { message: string }) { return <div className="ai-empty" role="status"><span>AI STATUS</span><h2>AI予想準備中</h2><p>{message}</p><p className="ai-note">合成データによる結果、未承認モデル、未確認データは公開しません。</p></div>; }
+function Header() { return <header className="ai-header"><div className="shell"><Link className="ai-brand" href="/">KEIBA <i>AI</i></Link><nav aria-label="主要ナビゲーション"><Link href="/races">レース一覧</Link><Link href="/predictions">AI予想</Link><Link href="/analysis">AI分析</Link><Link href="/performance">予想成績</Link></nav></div></header>; }
+function PredictionCard({ data, analysis }: { data: AiPrediction; analysis: boolean }) { return <section className="ai-card"><div className="ai-model-meta"><span>MODEL {data.model_version}</span><span>学習日時: {data.trained_at ?? "記録なし"}</span><span>特徴量時点: {data.feature_snapshot_at ?? "記録なし"}</span><span>データ出典: {data.data_source}</span></div><h2>{analysis ? "予測の見方" : "対象レースの参考スコア"}</h2>{analysis ? <><p className="ai-description">{data.probability_policy ?? "公開時に確率校正方針を明記します。"}</p><p className="ai-note">使用項目: {data.predictions[0]?.analysis_basis ?? "予測時点までの登録情報"}</p><p className="ai-note">各数値は馬券購入を推奨するものではなく、将来の結果を保証しません。</p></> : <ol className="ai-ranking">{data.predictions.map((item) => <li key={item.horse_id}><b>{item.predicted_rank}</b><span>{item.horse_name}</span><em>reference_win_score</em><strong>{item.reference_win_score.toFixed(3)}</strong></li>)}</ol>}<p className="ai-stamp">公開日時: {data.published_at} / 承認日時: {data.approved_at ?? "記録なし"}</p></section>; }
+export function AiPage({ kind }: { kind: PageKind }) {
+  const [data, setData] = useState<AiPrediction | AiPerformance | null>(null); const [error, setError] = useState(false);
+  useEffect(() => { const url = kind === "performance" ? "/api/performance" : `/api/races/${raceId}/${kind === "analysis" ? "analysis" : "prediction"}`; fetch(url).then((res) => res.ok ? res.json() : Promise.reject()).then(setData).catch(() => setError(true)); }, [kind]);
+  const [title, intro] = headings[kind]; const readyPrediction = data?.status === "READY" && kind !== "performance" ? data as AiPrediction : null; const readyPerformance = data?.status === "READY" && kind === "performance" ? data as Extract<AiPerformance, { status: "READY" }> : null;
+  return <div className="ai-page"><Header/><main className="shell ai-content"><p className="section-kicker">KEIBA AI / PHASE 5</p><h1>{title}</h1><p className="ai-intro">{intro}</p>{error ? <NotReady message="データの取得に失敗しました。時間をおいて再度お試しください。"/> : !data ? <div className="ai-empty" aria-live="polite">読み込み中です…</div> : readyPrediction ? <PredictionCard data={readyPrediction} analysis={kind === "analysis"}/> : readyPerformance ? <section className="ai-card"><div className="ai-model-meta"><span>データ出典: {readyPerformance.data_source}</span><span>集計レース数: {readyPerformance.races_evaluated}</span></div><h2>確定結果に基づく記録</h2><div className="ai-performance"><div><small>1着予測的中数</small><b>{readyPerformance.top1_winner_hits}</b></div><div><small>1着予測的中率</small><b>{readyPerformance.top1_winner_rate === null ? "算出不可" : `${(readyPerformance.top1_winner_rate * 100).toFixed(1)}%`}</b></div></div><p className="ai-stamp">集計日時: {readyPerformance.published_at}</p></section> : <NotReady message={(data as { message: string }).message}/>}</main><SiteFooter/></div>;
+}
