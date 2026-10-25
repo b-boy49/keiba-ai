@@ -57,6 +57,7 @@ export function HomePage({ races, localPresentationDemoEnabled = false }: { race
         <nav aria-label="主要メニュー">{menu.map(([icon, label, href], index) => <Link href={href} className={index === 0 ? "active" : ""} aria-current={index === 0 ? "page" : undefined} key={label}><Icon name={icon} />{label}</Link>)}</nav>
         <div className="header-actions"><div className="desktop-logout"><LogoutButton /></div><button type="button" className="icon-button search-icon" aria-label="レース検索へ移動" onClick={focusSearch}><Icon name="search" /></button><button type="button" className="icon-button menu-toggle" aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"} aria-expanded={isMenuOpen} aria-controls="mobile-nav" onClick={() => setIsMenuOpen(!isMenuOpen)}><Icon name={isMenuOpen ? "close" : "menu"} /></button></div>
       </header>
+      <div className="mobile-logout-bar shell"><LogoutButton /></div>
       {isMenuOpen && <nav id="mobile-nav" className="mobile-nav shell" aria-label="モバイルメニュー">{menu.map(([icon, label, href]) => <Link href={href} key={label} onClick={() => setIsMenuOpen(false)}><Icon name={icon} />{label}</Link>)}<LogoutButton /></nav>}
       <div className="shell hero-content" id="top">
         <p className="hero-script" aria-hidden="true">Predict the Next Winner</p>

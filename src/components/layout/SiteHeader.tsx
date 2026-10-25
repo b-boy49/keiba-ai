@@ -25,7 +25,7 @@ export function SiteHeader() {
     })}</nav>
     <div className="subheader-actions"><div className="desktop-logout"><LogoutButton /></div><button type="button" className="subheader-menu-toggle" aria-expanded={menuOpen} aria-controls="subheader-mobile-menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? "閉じる" : "メニュー"}</button></div>
     {menuOpen && <div id="subheader-mobile-menu" className="subheader-mobile-menu"><LogoutButton /></div>}
-  </div></header>;
+  </div><div className="mobile-logout-bar shell"><LogoutButton /></div></header>;
 }
 
 export function BackToHome() {
