@@ -5,6 +5,7 @@ import { FormEvent, RefObject, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DataStatusBadge } from "@/components/ui/DataStatusBadge";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { LogoutButton } from "@/components/layout/LogoutButton";
 import { HorseMark, Icon, IconName } from "@/app/icons";
 import { formatDotDate, formatJaDate } from "@/lib/format-date";
 import { raceStatusLabel, surfaceLabel, type Race } from "@/types/race";
@@ -54,9 +55,9 @@ export function HomePage({ races, localPresentationDemoEnabled = false }: { race
       <header className="site-header shell">
         <Link className="brand" href="/" aria-label="KEIBA AI ホーム"><HorseMark className="horse-mark" /><span><b>KEIBA <i>AI</i></b><small>AIで読む、競馬の未来</small></span></Link>
         <nav aria-label="主要メニュー">{menu.map(([icon, label, href], index) => <Link href={href} className={index === 0 ? "active" : ""} aria-current={index === 0 ? "page" : undefined} key={label}><Icon name={icon} />{label}</Link>)}</nav>
-        <div className="header-actions"><button type="button" className="icon-button search-icon" aria-label="レース検索へ移動" onClick={focusSearch}><Icon name="search" /></button><button type="button" className="icon-button menu-toggle" aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"} aria-expanded={isMenuOpen} aria-controls="mobile-nav" onClick={() => setIsMenuOpen(!isMenuOpen)}><Icon name={isMenuOpen ? "close" : "menu"} /></button></div>
+        <div className="header-actions"><div className="desktop-logout"><LogoutButton /></div><button type="button" className="icon-button search-icon" aria-label="レース検索へ移動" onClick={focusSearch}><Icon name="search" /></button><button type="button" className="icon-button menu-toggle" aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"} aria-expanded={isMenuOpen} aria-controls="mobile-nav" onClick={() => setIsMenuOpen(!isMenuOpen)}><Icon name={isMenuOpen ? "close" : "menu"} /></button></div>
       </header>
-      {isMenuOpen && <nav id="mobile-nav" className="mobile-nav shell" aria-label="モバイルメニュー">{menu.map(([icon, label, href]) => <Link href={href} key={label} onClick={() => setIsMenuOpen(false)}><Icon name={icon} />{label}</Link>)}</nav>}
+      {isMenuOpen && <nav id="mobile-nav" className="mobile-nav shell" aria-label="モバイルメニュー">{menu.map(([icon, label, href]) => <Link href={href} key={label} onClick={() => setIsMenuOpen(false)}><Icon name={icon} />{label}</Link>)}<LogoutButton /></nav>}
       <div className="shell hero-content" id="top">
         <p className="hero-script" aria-hidden="true">Predict the Next Winner</p>
         <p className="hero-catch" aria-hidden="true">一瞬の、<br />その先を読む。</p>

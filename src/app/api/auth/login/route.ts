@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { passwordIsValid } from "@/lib/auth/password";
 import { createSession, SESSION_COOKIE } from "@/lib/auth/session";
+import { saveSession } from "@/lib/auth/session-store";
 import { privateJson, privateNoStoreHeaders } from "@/lib/security/cache-control";
 import { registerLoginAttempt } from "@/lib/security/login-rate-limit";
 
@@ -16,7 +17,9 @@ export async function POST(request: Request) {
     return privateJson({ error: limit.reason === "LIMITED" ? "TOO_MANY_ATTEMPTS" : "RATE_LIMIT_UNAVAILABLE", message }, { status: limit.reason === "LIMITED" ? 429 : 503, headers: { "Retry-After": String(limit.retryAfter) } });
   }
   if (!passwordValid) return privateJson({ error: "INVALID_PASSWORD", message: "パスワードを確認してください。" }, { status: 401 });
-  const session = await createSession(secret); const response = NextResponse.json({ ok: true }, { headers: privateNoStoreHeaders() });
+  const session = await createSession(secret);
+  try { await saveSession(session.id, session.expiresAt); } catch { return privateJson({ error: "SESSION_STORE_UNAVAILABLE", message: "ログインできません。時間を置いて再試行してください。" }, { status: 503, headers: { "Retry-After": "60" } }); }
+  const response = NextResponse.json({ ok: true }, { headers: privateNoStoreHeaders() });
   response.cookies.set({ name: SESSION_COOKIE, value: session.value, httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", path: "/", expires: new Date(session.expiresAt * 1000) });
   return response;
 }
